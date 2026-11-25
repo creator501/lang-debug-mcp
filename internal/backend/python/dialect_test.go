@@ -1,6 +1,7 @@
 package python
 
 import (
+	"path/filepath"
 	"testing"
 
 	"github.com/langdebug/lang-debug-mcp/internal/backend"
@@ -67,7 +68,9 @@ func TestResolveTargetRejectsNonPython(t *testing.T) {
 }
 
 func TestIsPythonCommand(t *testing.T) {
-	yes := []string{"python", "python3", "python3.12", `C:\venv\Scripts\python.exe`, "py", "pypy3"}
+	// 带路径的解释器要用 filepath.Join 构造，避免把 Windows 分隔符写死在用例里。
+	venvPython := filepath.Join("venv", "Scripts", "python.exe")
+	yes := []string{"python", "python3", "python3.12", venvPython, "py", "pypy3"}
 	for _, in := range yes {
 		if !isPythonCommand(in) {
 			t.Fatalf("%q 应识别为 Python 解释器", in)

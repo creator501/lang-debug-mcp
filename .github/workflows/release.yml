@@ -13,11 +13,11 @@ jobs:
   release:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v7.0.1
         with:
           fetch-depth: 0
 
-      - uses: actions/setup-go@v5
+      - uses: actions/setup-go@v7.1.0
         with:
           go-version-file: go.mod
           cache: true
@@ -31,10 +31,11 @@ jobs:
           test "$TAG_VERSION" = "$CODE_VERSION" \
             || { echo "::error::tag 与 main.go 的 version 不一致"; exit 1; }
 
-      - name: Test and check generated skills
-        run: |
-          go test ./...
-          go run ./cmd/skillgen -root . -check
+      - name: Test
+        run: go test ./...
+
+      - name: Check generated skills
+        run: go run ./cmd/skillgen -root . -check
 
       - name: Build binaries
         run: |

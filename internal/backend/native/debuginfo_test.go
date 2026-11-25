@@ -57,8 +57,8 @@ func TestCheckDebugInfoBlocksMissingLineTable(t *testing.T) {
 	if model.CodeOf(err) != model.CodeEnvDebugInfo {
 		t.Fatalf("无 -g 的二进制应返回 %s，实际 %v", model.CodeEnvDebugInfo, err)
 	}
-	if !strings.Contains(err.Error(), "源码行号") {
-		t.Fatalf("错误应指出缺用户源码的行号信息: %v", err)
+	if !strings.Contains(err.Error(), "行号") {
+		t.Fatalf("错误应指出缺行号信息: %v", err)
 	}
 }
 

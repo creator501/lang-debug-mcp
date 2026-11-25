@@ -13,7 +13,7 @@ import (
 func TestParseGoRunTarget(t *testing.T) {
 	target, err := parseTarget(backend.LaunchSpec{
 		Command: []string{"go", "run", "./cmd/app", "-port=8080"},
-		Cwd:     "E:\\work",
+		Cwd:     t.TempDir(),
 	})
 	if err != nil {
 		t.Fatalf("解析失败: %v", err)
@@ -33,7 +33,7 @@ func TestParseGoRunTarget(t *testing.T) {
 func TestParseGoRunBuildFlags(t *testing.T) {
 	target, err := parseTarget(backend.LaunchSpec{
 		Command: []string{"go", "run", "-tags", "dev", "-race", "./cmd/app"},
-		Cwd:     "E:\\work",
+		Cwd:     t.TempDir(),
 	})
 	if err != nil {
 		t.Fatalf("解析失败: %v", err)
@@ -90,7 +90,7 @@ func TestParseTargetErrors(t *testing.T) {
 func TestLaunchArgsCarryDebugFlags(t *testing.T) {
 	args, err := Dialect{}.Launch(backend.LaunchSpec{
 		Command: []string{"go", "run", "-gcflags", "all=-N -l", "./cmd/app"},
-		Cwd:     "E:\\work",
+		Cwd:     t.TempDir(),
 	})
 	if err != nil {
 		t.Fatalf("构造 launch 参数失败: %v", err)

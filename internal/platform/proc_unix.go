@@ -4,7 +4,9 @@ package platform
 
 import (
 	"fmt"
+	"os"
 	"os/exec"
+	"strings"
 	"syscall"
 )
 
@@ -43,15 +45,28 @@ func (t *pgroupTree) kill(cmd *exec.Cmd) error {
 			return fmt.Errorf("终止进程树失败: %w", err)
 		}
 	}
+	// 回收直接子进程：Unix 上若不 Wait，被 SIGKILL 的进程会一直停在僵尸态，
+	// kill(pid, 0) 仍返回成功，上层会误以为整棵树没杀干净。
+	_, _ = cmd.Process.Wait()
 	return nil
 }
 
 func (t *pgroupTree) close() error { return nil }
 
-// IsAlive 报告进程是否仍然存在。
+// IsAlive 报告进程是否仍然存在；僵尸态视为已结束。
 func IsAlive(pid int) bool {
 	if pid <= 0 {
 		return false
+	}
+	// /proc/<pid>/stat 形如 "123 (name) S ..."，进程名可能含空格与括号，
+	// 因此从最后一个 ')' 之后取状态字段。
+	if data, err := os.ReadFile(fmt.Sprintf("/proc/%d/stat", pid)); err == nil {
+		if i := strings.LastIndexByte(string(data), ')'); i >= 0 {
+			fields := strings.Fields(string(data[i+1:]))
+			if len(fields) > 0 && fields[0] == "Z" {
+				return false
+			}
+		}
 	}
 	return syscall.Kill(pid, 0) == nil
 }
