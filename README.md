@@ -191,4 +191,4 @@ go run ./cmd/skillgen -root . -check   # skills must not drift from the template
 
 ## License
 
-No license has been declared for this repository yet. Add a `LICENSE` file (MIT, Apache-2.0, …) before publishing, and update this section accordingly.
+Licensed under the [Apache License, Version 2.0](./LICENSE).

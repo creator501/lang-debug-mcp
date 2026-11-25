@@ -191,4 +191,4 @@ go run ./cmd/skillgen -root . -check   # 校验 skill 产物与模板没有漂�
 
 ## 许可
 
-仓库目前尚未声明开源协议。发布前请补充 `LICENSE`（如 MIT、Apache-2.0），并同步更新本节。
+本项目使用 [Apache License 2.0](./LICENSE)。
